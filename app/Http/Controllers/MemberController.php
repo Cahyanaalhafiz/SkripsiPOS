@@ -28,17 +28,18 @@ class MemberController extends Controller
             ->addIndexColumn()
             ->addColumn('select_all', function ($produk) {
                 return '
-                    <input type="checkbox" name="id_member[]" value="'. $produk->id_member .'">
+                    <input type="checkbox" name="id_member[]" value="' . $produk->id_member . '">
                 ';
             })
             ->addColumn('kode_member', function ($member) {
-                return '<span class="label label-success">'. $member->kode_member .'<span>';
+                return '<span class="label label-success">' . $member->kode_member . '<span>';
             })
             ->addColumn('aksi', function ($member) {
                 return '
                 <div class="btn-group">
-                    <button type="button" onclick="editForm(`'. route('member.update', $member->id_member) .'`)" class="btn btn-xs btn-info btn-flat"><i class="fa fa-pencil"></i></button>
-                    <button type="button" onclick="deleteData(`'. route('member.destroy', $member->id_member) .'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button>
+                    <button type="button" onclick="editForm(`' . route('member.update', $member->id_member) . '`)" class="btn btn-xs btn-info btn-flat"><i class="fa fa-pencil"></i></button>
+                    <button type="button" onclick="cetakMember(`' . route('member.cetak_member', ['id_member' => [$member->id_member]]) . '`)" class="btn btn-xs btn-warning btn-flat"><i class="fa fa-id-card"></i></button>
+                    <button type="button" onclick="deleteData(`' . route('member.destroy', $member->id_member) . '`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button>
                 </div>
                 ';
             })
@@ -65,7 +66,7 @@ class MemberController extends Controller
     public function store(Request $request)
     {
         $member = Member::latest()->first() ?? new Member();
-        $kode_member = (int) $member->kode_member +1;
+        $kode_member = (int) $member->kode_member + 1;
 
         $member = new Member();
         $member->kode_member = tambah_nol_didepan($kode_member, 5);
@@ -142,7 +143,7 @@ class MemberController extends Controller
 
         $no  = 1;
         $pdf = PDF::loadView('member.cetak', compact('datamember', 'no', 'setting'));
-        $pdf->setPaper(array(0, 0, 566.93, 850.39), 'potrait');
+        $pdf->setPaper(array(0, 0, 566.93, 370), 'potrait');
         return $pdf->stream('member.pdf');
     }
 }
